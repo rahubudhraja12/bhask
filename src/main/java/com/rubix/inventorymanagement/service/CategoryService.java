@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.Category;
 import com.rubix.inventorymanagement.repository.CategoryRepository;
@@ -26,7 +27,7 @@ public class CategoryService {
 			return ResponseEntity.unprocessableEntity().body("Failed to add Category");
 
 	}
-
+	@Transactional
 	public ResponseEntity<Object> updateCategory(Category categorys, long categoryId) throws Exception {
 
 		Category category = new Category();

@@ -29,7 +29,7 @@ import com.rubix.inventorymanagement.service.ProductService;
 
 /**
  * @author Administrator
- * @class ProductController 
+ * @class ProductController
  */
 @RestController
 @RequestMapping("inventory")
@@ -50,29 +50,33 @@ public class ProductController {
 	private CatalogItemService catalogService;
 	@Autowired
 	private CatalogItemRepository catalogRepository;
-	
-	
-	
+
 	@PostMapping("/product/{productId}/item/{itemId}/catalog")
-	public ResponseEntity<Object> addCatalog(@RequestBody  CatalogItem  catalogItem,@PathVariable(value = "productId") Long productId,
-			@PathVariable(value = "itemId") Long itemId) throws Exception {
-		return catalogService.addCatalog(catalogItem,productId,itemId);
+	public ResponseEntity<Object> addCatalog(@RequestBody CatalogItem catalogItem,
+			@PathVariable(value = "productId") Long productId, @PathVariable(value = "itemId") Long itemId)
+			throws Exception {
+		return catalogService.addCatalog(catalogItem, productId, itemId);
 	}
+
 	@GetMapping("/getCatalog")
 	public List<CatalogItem> getAllCatalog() {
 		return catalogRepository.findAll();
 
 	}
+
 	@PutMapping("/product/{productId}/item/{itemId}/catalog/{catalogId}")
-	public ResponseEntity<Object> updateCatalog(@RequestBody  CatalogItem  catalogItem,@PathVariable(value = "productId") Long productId,
-			@PathVariable(value = "itemId") Long itemId,@PathVariable(value = "catalogId") Long catalogId) throws Exception {
-		return  catalogService.updateCatalog(catalogItem,productId,itemId,catalogId);
+	public ResponseEntity<Object> updateCatalog(@RequestBody CatalogItem catalogItem,
+			@PathVariable(value = "productId") Long productId, @PathVariable(value = "itemId") Long itemId,
+			@PathVariable(value = "catalogId") Long catalogId) throws Exception {
+		return catalogService.updateCatalog(catalogItem, productId, itemId, catalogId);
 	}
+
 	@DeleteMapping("/product/item/catalog/{catalogId}")
 	public ResponseEntity<?> deleteCatalog(@PathVariable(value = "catalogId") Long catalogId) {
 		return catalogService.deleteCatalog(catalogId);
 
 	}
+
 	/**
 	 * 
 	 * @method addCategory
@@ -83,6 +87,7 @@ public class ProductController {
 	public ResponseEntity<Object> addCategory(@RequestBody Category category) throws Exception {
 		return categoryService.addCategory(category);
 	}
+
 	/**
 	 * 
 	 * @method getAllCategory
@@ -94,6 +99,7 @@ public class ProductController {
 		return categoryRepository.findAll();
 
 	}
+
 	/**
 	 * 
 	 * @method updateCategory
@@ -106,6 +112,7 @@ public class ProductController {
 			@PathVariable(value = "categoryId") Long categoryId) throws Exception {
 		return categoryService.updateCategory(category, categoryId);
 	}
+
 	/**
 	 * 
 	 * @method deleteCategory
@@ -117,6 +124,7 @@ public class ProductController {
 		return categoryService.deleteCategory(categoryId);
 
 	}
+
 	/**
 	 * 
 	 * @method addProduct
@@ -127,9 +135,10 @@ public class ProductController {
 	public ResponseEntity<Object> addProduct(@RequestBody Product product) throws Exception {
 		return productService.addProduct(product);
 	}
+
 	/**
 	 * 
-	 * @method  getAll
+	 * @method getAll
 	 * @return List<Product>
 	 */
 	@GetMapping("/getProducts")
@@ -137,6 +146,7 @@ public class ProductController {
 		return productRepository.findAll();
 
 	}
+
 	/**
 	 * 
 	 * @method getByProduct
@@ -149,6 +159,7 @@ public class ProductController {
 		product = productRepository.getAll(productId);
 		return product;
 	}
+
 	/**
 	 * 
 	 * @method updateProduct
@@ -157,10 +168,10 @@ public class ProductController {
 	 */
 	@PutMapping("/product/{productId}")
 	public ResponseEntity<Object> updateProduct(@RequestBody Product product,
-			@PathVariable(value = "productId") Long productId)
-			throws Exception {
+			@PathVariable(value = "productId") Long productId) throws Exception {
 		return productService.updateProduct(product, productId);
 	}
+
 	/**
 	 * 
 	 * @method deleteProduct
@@ -172,23 +183,26 @@ public class ProductController {
 		return productService.deleteProduct(productId);
 
 	}
-	/**
-	 * 
-	 * @method addItem
-	 * @param Item,productId 
-	 * @return ResponseEntity
-	 */
+
 	@GetMapping("/getItemByProductId/{productId}")
 	public List<Item> getItemByProductId(@PathVariable(value = "productId") Long productId) {
-		List<Item> item=new ArrayList<>();
+		List<Item> item = new ArrayList<>();
 		item = itemRepository.findByProductId(productId);
 		return item;
 	}
+
+	/**
+	 * 
+	 * @method addItem
+	 * @param Item,productId
+	 * @return ResponseEntity
+	 */
 	@PostMapping("/product/{productId}/item")
 	public ResponseEntity<Object> addItem(@RequestBody Item item, @PathVariable(value = "productId") Long productId)
 			throws Exception {
 		return itemService.addItem(item, productId);
 	}
+
 	/**
 	 * 
 	 * @method updateItem
@@ -200,6 +214,7 @@ public class ProductController {
 			@PathVariable(value = "itemId") Long itemId) throws Exception {
 		return itemService.updateItem(item, productId, itemId);
 	}
+
 	/**
 	 * 
 	 * @method deleteItem

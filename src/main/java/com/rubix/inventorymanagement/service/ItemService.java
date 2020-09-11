@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.Product;
 import com.rubix.inventorymanagement.repository.ProductRepository;
@@ -42,7 +43,7 @@ public class ItemService {
 				return ResponseEntity.unprocessableEntity().body("Failed to add item");
 		}
 	}
-
+	@Transactional
 	public ResponseEntity<Object> updateItem(Item items, long productId, long itemId)
 			throws Exception, ProductException {
 		Product product = productRepository.findByProductId(productId);

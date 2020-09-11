@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,18 +18,12 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-/*@JsonIdentityInfo(
-		  generator = ObjectIdGenerators.PropertyGenerator.class, 
-		  property = "itemId")*/
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "item", schema = "public")
-//@JsonIgnoreProperties("catalogItem")
+
 public class Item {
 
 	@Id
@@ -44,7 +37,7 @@ public class Item {
 	private String sku;
 	private long busyItemCode;
 	private String longName;
-	private String description;	
+	private String description;
 	private double price;
 	private long updatedBy;
 	@Temporal(TemporalType.TIMESTAMP)
@@ -205,5 +198,4 @@ public class Item {
 		this.catalog = catalog;
 	}
 
-	
 }
