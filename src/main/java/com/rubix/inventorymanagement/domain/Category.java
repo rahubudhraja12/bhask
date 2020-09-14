@@ -58,7 +58,7 @@ public class Category {
 	private Boolean parentCategory;
 	@JsonIgnore
 	@ManyToMany(targetEntity = Product.class, mappedBy = "category", fetch = FetchType.EAGER, cascade = {
-			CascadeType.MERGE, CascadeType.REFRESH })
+			CascadeType.MERGE, CascadeType.REFRESH,CascadeType.REMOVE })
 
 	private List<Product> product;
 
