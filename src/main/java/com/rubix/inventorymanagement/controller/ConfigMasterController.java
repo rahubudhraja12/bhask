@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rubix.inventorymanagement.domain.ConfigMaster;
@@ -18,7 +19,7 @@ import com.rubix.inventorymanagement.repository.ConfigMasterRepository;
 import com.rubix.inventorymanagement.service.ConfigMasterService;
 
 @RestController
-@RequestMapping("inventory")
+@RequestMapping("/")
 
 public class ConfigMasterController {
 	@Autowired
@@ -26,24 +27,24 @@ public class ConfigMasterController {
 	@Autowired
 	private ConfigMasterRepository configRepository;
 
-	@GetMapping("/getConfig")
+	@GetMapping("getConfigAll")
 	public List<ConfigMaster> getAllConfig() {
 		return configRepository.findAll();
 
 	}
 
-	@PostMapping("/config")
+	@PostMapping("saveConfig")
 	public ResponseEntity<Object> addConfig(@RequestBody ConfigMaster config) throws Exception {
 		return configService.addConfig(config);
 	}
 
-	@PutMapping("/config/{masterId}")
+	@PutMapping("updateConfig")
 	public ResponseEntity<Object> updateConfig(@RequestBody ConfigMaster config,
-			@PathVariable(value = "masterId") long masterId) throws Exception {
+			@RequestParam(value = "masterId",required=true) long masterId) throws Exception {
 		return configService.updateConfig(config, masterId);
 	}
 
-	@DeleteMapping("/config/{masterId}")
+	@DeleteMapping("deleteConfig/{masterId}")
 	public ResponseEntity<?> deleteConfig(@PathVariable(value = "masterId") long masterId) {
 		return configService.deleteConfig(masterId);
 

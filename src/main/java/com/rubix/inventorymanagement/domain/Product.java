@@ -5,9 +5,12 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn ;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -54,8 +57,13 @@ public class Product {
 	private String workType;
 	private long updatedBy;
 	private long starRating;
-	@ManyToMany(targetEntity = Category.class, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
+	@ManyToMany(targetEntity=Category.class,fetch = FetchType.EAGER,cascade = {  CascadeType.MERGE,
 			CascadeType.REFRESH })
+	@JoinTable(
+	        name = "product_category", 
+	        joinColumns = { @JoinColumn(name = "product_id",referencedColumnName = "productId") }, 
+	        inverseJoinColumns = { @JoinColumn(name = "category_id",referencedColumnName = "categoryId") }
+	    )
 	private List<Category> category;
 	private String lastNoProductAdded;
 	@Temporal(TemporalType.TIMESTAMP)

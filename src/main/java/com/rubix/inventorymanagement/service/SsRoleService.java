@@ -59,7 +59,7 @@ public class SsRoleService {
 
 		SsRole roles = ssRoleRepository.findByRoleId(roleId);
 		if (roles == null) {
-			return ResponseEntity.unprocessableEntity().body("No Product found with this ID");
+			return ResponseEntity.unprocessableEntity().body("No Roles found with this ID");
 		} else {
 			ssRoleRepository.delete(roles);
 			return ResponseEntity.ok("Role removed");

@@ -14,7 +14,7 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
-
+	
 	public ResponseEntity<Object> addProduct(Product products) throws Exception {
 
 		Product product = new Product();
@@ -34,7 +34,7 @@ public class ProductService {
 		Product product = new Product();
 		product = productRepository.findByProductId(productId);
 		if (product == null) {
-			return ResponseEntity.unprocessableEntity().body(" Category or product not found with this ID");
+			return ResponseEntity.unprocessableEntity().body("  product not found with this ID");
 		} else {
 			BeanUtils.copyProperties(products, product, "items", "productId", "catalog");
 			product.setProductId(productId);

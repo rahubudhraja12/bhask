@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rubix.inventorymanagement.domain.Address;
@@ -25,7 +26,7 @@ import com.rubix.inventorymanagement.service.SsRoleService;
 import com.rubix.inventorymanagement.service.SsUserService;
 
 @RestController
-@RequestMapping("inventory")
+@RequestMapping("/")
 public class RoleController {
 	@Autowired
 	private SsRoleService roleService;
@@ -38,117 +39,117 @@ public class RoleController {
 	@Autowired
 	private CustomerService customerService;
 
-	@PostMapping("/role")
+	@PostMapping("saveRole")
 	public ResponseEntity<Object> addRoles(@RequestBody SsRole role) throws Exception {
 		return roleService.createRole(role);
 	}
 
-	@PutMapping("/role/{roleId}")
-	public ResponseEntity<Object> updateRoles(@RequestBody SsRole role, @PathVariable(value = "roleId") Long roleId)
+	@PutMapping("updateRole")
+	public ResponseEntity<Object> updateRoles(@RequestBody SsRole role, @RequestParam(value = "roleId",required=true) Long roleId)
 			throws Exception {
 		return roleService.updateRole(role, roleId);
 	}
 
-	@DeleteMapping("/role/{roleId}")
+	@DeleteMapping("deleteRole/{roleId}")
 	public ResponseEntity<?> deleteRoles(@PathVariable(value = "roleId") Long roleId) {
 		return roleService.deleteRole(roleId);
 	}
 
-	@GetMapping("/getRoles")
+	@GetMapping("getRoleAll")
 	public List<SsRole> getAllRoles() {
 		return roleService.getRoles();
 	}
 
-	@PostMapping("/role/{roleId}/group")
-	public ResponseEntity<Object> addGroups(@RequestBody SsGroup group, @PathVariable(value = "roleId") Long roleId)
+	@PostMapping("saveGroup")
+	public ResponseEntity<Object> addGroups(@RequestBody SsGroup group, @RequestParam(value = "roleId",required=true) Long roleId)
 			throws Exception {
 		return groupService.createGroup(group, roleId);
 	}
 
-	@PutMapping("/role/{roleId}/group/{groupId}")
-	public ResponseEntity<Object> updateGroups(@RequestBody SsGroup group, @PathVariable(value = "roleId") Long roleId,
-			@PathVariable(value = "groupId") Long groupId) throws Exception {
+	@PutMapping("updateGroup")
+	public ResponseEntity<Object> updateGroups(@RequestBody SsGroup group, @RequestParam(value = "roleId",required=true) Long roleId,
+			@RequestParam(value = "groupId") Long groupId) throws Exception {
 		return groupService.updateGroup(group, roleId, groupId);
 	}
 
-	@DeleteMapping("/role/{roleId}/group/{groupId}")
+	@DeleteMapping("deleteGroup/{roleId}/{groupId}")
 	public ResponseEntity<?> deleteGroups(@PathVariable(value = "roleId") Long roleId,
 			@PathVariable(value = "groupId") Long groupId) {
 		return groupService.deleteGroup(roleId, groupId);
 	}
 
-	@GetMapping("/getGroups")
+	@GetMapping("getGroupAll")
 	public List<SsGroup> getAllGroups() {
 		return groupService.getGroups();
 	}
 
-	@PostMapping("/group/{groupId}/user")
-	public ResponseEntity<Object> addUser(@RequestBody SsUser user, @PathVariable(value = "groupId") Long groupId)
+	@PostMapping("saveUser")
+	public ResponseEntity<Object> addUser(@RequestBody SsUser user, @RequestParam(value = "groupId",required=true) Long groupId)
 			throws Exception {
 		return userService.createUser(user, groupId);
 	}
 
-	@PutMapping("/group/{groupId}/user/{userId}")
-	public ResponseEntity<Object> updateUsers(@RequestBody SsUser user, @PathVariable(value = "groupId") Long groupId,
-			@PathVariable(value = "userId") Long userId) throws Exception {
+	@PutMapping("updateUser")
+	public ResponseEntity<Object> updateUsers(@RequestBody SsUser user, @RequestParam(value = "groupId",required=true) Long groupId,
+			@RequestParam(value = "userId") Long userId) throws Exception {
 		return userService.updateUser(user, groupId, userId);
 	}
 
-	@DeleteMapping("/group/{groupId}/user/{userId}")
+	@DeleteMapping("deleteUser/{groupId}/{userId}")
 	public ResponseEntity<?> deleteUsers(@PathVariable(value = "groupId") Long groupId,
 			@PathVariable(value = "userId") Long userId) {
 		return userService.deleteUser(groupId, userId);
 	}
 
-	@GetMapping("/getUsers")
+	@GetMapping("/getUserAll")
 	public List<SsUser> getAllUsers() {
 		return userService.getUser();
 	}
 
-	@PostMapping("/user/{userId}/address")
-	public ResponseEntity<Object> addAddress(@RequestBody Address address, @PathVariable(value = "userId") Long userId)
+	@PostMapping("saveAddress")
+	public ResponseEntity<Object> addAddress(@RequestBody Address address, @RequestParam(value = "userId",required=true) Long userId)
 			throws Exception {
 		return addressService.createAddress(address, userId);
 	}
 
-	@PutMapping("/user/{userId}/address/{addressId}")
+	@PutMapping("updateAddress")
 	public ResponseEntity<Object> updateAddress(@RequestBody Address address,
-			@PathVariable(value = "userId") Long userId, @PathVariable(value = "addressId") Long addressId)
+			@RequestParam(value = "userId") Long userId, @RequestParam(value = "addressId",required=true) Long addressId)
 			throws Exception {
 		return addressService.updateAddress(address, userId, addressId);
 	}
 
-	@DeleteMapping("/user/{userId}/address/{addressId}")
+	@DeleteMapping("deleteAddress/{userId}/{addressId}")
 	public ResponseEntity<?> deleteAddress(@PathVariable(value = "userId") Long userId,
 			@PathVariable(value = "addressId") Long addressId) {
 		return addressService.deleteAddress(userId, addressId);
 	}
 
-	@GetMapping("/getAddress")
+	@GetMapping("getAddressAll")
 	public List<Address> getAllAddress() {
 		return addressService.getAddress();
 	}
 
-	@PostMapping("/user/{userId}/address/{addressId}/customer")
+	@PostMapping("saveCustomer")
 	public ResponseEntity<Object> addCustomer(@RequestBody Customer customer,
-			@PathVariable(value = "userId") Long userId, @PathVariable(value = "addressId") Long addressId)
+			@RequestParam(value = "userId",required=true) Long userId,@RequestParam(value = "addressId",required=true) Long addressId)
 			throws Exception {
 		return customerService.addCustomer(customer, userId, addressId);
 	}
 
-	@PutMapping("/user/{userId}/address/{addressId}/customer/{customerId}")
+	@PutMapping("updateCustomer")
 	public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer,
-			@PathVariable(value = "userId") Long userId, @PathVariable(value = "addressId") Long addressId,
-			@PathVariable(value = "customerId") Long customerId) throws Exception {
+			@RequestParam(value = "userId",required=true) Long userId,@RequestParam(value = "addressId",required=true) Long addressId,
+			@RequestParam(value = "customerId",required=true) Long customerId) throws Exception {
 		return customerService.updateCustomer(customer, userId, addressId, customerId);
 	}
 
-	@DeleteMapping("/customer/{customerId}")
+	@DeleteMapping("deleteCustomer/{customerId}")
 	public ResponseEntity<?> deleteCustomer(@PathVariable(value = "customerId") Long customerId) {
 		return customerService.deleteCustomer(customerId);
 	}
 
-	@GetMapping("/getCustomers")
+	@GetMapping("getCustomersAll")
 	public List<Customer> getAllCustomers() {
 		return customerService.getCustomer();
 	}

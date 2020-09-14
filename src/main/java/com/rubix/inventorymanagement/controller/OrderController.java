@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rubix.inventorymanagement.domain.OrderDetail;
@@ -18,31 +19,31 @@ import com.rubix.inventorymanagement.repository.OrderDetailRepository;
 import com.rubix.inventorymanagement.service.OrderDetailService;
 
 @RestController
-@RequestMapping("inventory")
+@RequestMapping("/")
 public class OrderController {
 	@Autowired
 	private OrderDetailService orderService;
 	@Autowired
 	private OrderDetailRepository orderRepository;
 
-	@GetMapping("/getOrders")
+	@GetMapping("getOrdersAll")
 	public List<OrderDetail> getAllOrder() {
 		return orderRepository.findAll();
 
 	}
 
-	@PostMapping("/order")
+	@PostMapping("saveOrder")
 	public ResponseEntity<Object> placeOrder(@RequestBody OrderDetail order) throws Exception {
 		return orderService.placeOrder(order);
 	}
 
-	@PutMapping("/order/{orderId}")
+	@PutMapping("updateOrder")
 	public ResponseEntity<Object> updateOrder(@RequestBody OrderDetail order,
-			@PathVariable(value = "orderId") Long orderId) throws Exception {
+			@RequestParam(value = "orderId",required=true) Long orderId) throws Exception {
 		return orderService.updateOrder(order, orderId);
 	}
 
-	@DeleteMapping("/order/{orderId}")
+	@DeleteMapping("deleteOrder/{orderId}")
 	public ResponseEntity<?> deleteOrder(@PathVariable(value = "orderId") Long orderId) {
 		return orderService.deleteOrder(orderId);
 
