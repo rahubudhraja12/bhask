@@ -12,7 +12,7 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
 	Address findByAddressId(long addressId);
 
-	@Query(value = "SELECT * from Address  WHERE  updated_by=:id and address_id=:addressId", nativeQuery = true)
+	@Query(value = "SELECT * from Address  WHERE  user_id=:id and address_id=:addressId", nativeQuery = true)
 	Address findByUserIdAndAddressId(@Param("id") long userId, @Param("addressId") long addressId);
 
 }

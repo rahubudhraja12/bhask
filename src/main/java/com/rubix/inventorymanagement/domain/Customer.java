@@ -14,6 +14,7 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
 @Entity
 @Table(name = "customer", schema = "public")
 public class Customer {
@@ -28,9 +29,7 @@ public class Customer {
 	@JoinColumn(name = "primary_address_id", referencedColumnName = "addressId")
 	private Address address;
 	private String emailAddress;
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "updated_by", referencedColumnName = "userId")
-	private SsUser ssUser;
+	private long updatedBy;
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "dd/MM/yyyy", shape = Shape.STRING)
 	private Date lastUpdated;
@@ -40,13 +39,14 @@ public class Customer {
 	}
 
 	public Customer(long customerId, String firstName, String lastName, String description, String emailAddress,
-			Date lastUpdated) {
+			long updatedBy, Date lastUpdated) {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.description = description;
 		this.emailAddress = emailAddress;
+		this.updatedBy = updatedBy;
 		this.lastUpdated = lastUpdated;
 	}
 
@@ -106,12 +106,12 @@ public class Customer {
 		this.address = address;
 	}
 
-	public SsUser getSsUser() {
-		return ssUser;
+	public long getUpdatedBy() {
+		return updatedBy;
 	}
 
-	public void setSsUser(SsUser ssUser) {
-		this.ssUser = ssUser;
+	public void setUpdatedBy(long updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 }

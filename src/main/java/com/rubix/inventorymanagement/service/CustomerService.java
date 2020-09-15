@@ -16,8 +16,6 @@ public class CustomerService {
 	@Autowired
 	private AddressRepository addressRepository;
 	@Autowired
-	private SsUserRepository userRepository;
-	@Autowired
 	private CustomerRepository customerRepository;
 
 	public List<Customer> getCustomer() {
@@ -25,36 +23,36 @@ public class CustomerService {
 		return customer;
 	}
 
-	public ResponseEntity<Object> addCustomer(Customer customer, long userId, long addressId) throws Exception {
+	public ResponseEntity<Object> addCustomer(Customer customer,long addressId) throws Exception {
 
-		SsUser users = userRepository.findByUserId(userId);
 		Address addresses = addressRepository.findByAddressId(addressId);
 		Customer customers = new Customer();
-		BeanUtils.copyProperties(customer, customers, "address", "ssUser");
+		if ( addresses == null ) {
+			return ResponseEntity.unprocessableEntity().body("  Address ID doesn't Exit");
+		} else {
+		BeanUtils.copyProperties(customer, customers, "address");
 		customers.setAddress(addresses);
-		customers.setSsUser(users);
 		Customer savedCustomer = customerRepository.save(customers);
 		Customer customersExist = customerRepository.findByCustomerId(savedCustomer.getCustomerId());
 		if (customersExist != null)
 			return ResponseEntity.ok("Customer Added");
 		else
 			return ResponseEntity.unprocessableEntity().body("Failed to add customer");
-
+		}
 	}
 
 	@Transactional
-	public ResponseEntity<Object> updateCustomer(Customer customer, long userId, long addressId, long customerId)
+	public ResponseEntity<Object> updateCustomer(Customer customer,long addressId, long customerId)
 			throws Exception {
-		SsUser users = userRepository.findByUserId(userId);
+
 		Address addresses = addressRepository.findByAddressId(addressId);
 		Customer customers = customerRepository.findByCustomerId(customerId);
 
-		if (users == null || addresses == null || customers == null) {
-			return ResponseEntity.unprocessableEntity().body(" User or Address not found with this customer ID");
+		if (addresses == null || customers == null) {
+			return ResponseEntity.unprocessableEntity().body("  Address ID or customer ID doesnt exist");
 		} else {
-			BeanUtils.copyProperties(customer, customers, "address", "ssUser");
+			BeanUtils.copyProperties(customer, customers, "address");
 			customers.setAddress(addresses);
-			customers.setSsUser(users);
 			customers.setCustomerId(customerId);
 			Customer savedCustomer = customerRepository.save(customers);
 			Customer customersExist = customerRepository.findByCustomerId(savedCustomer.getCustomerId());
@@ -66,9 +64,9 @@ public class CustomerService {
 
 	}
 
-	public ResponseEntity<?> deleteCustomer(long customerId) {
+	public ResponseEntity<?> deleteCustomer(long addressId,long customerId) {
 
-		Customer customers = customerRepository.findByCustomerId(customerId);
+		Customer customers = customerRepository.findByCustomerIdAndAddressId(customerId,addressId);
 		if (customers == null) {
 			return ResponseEntity.unprocessableEntity().body("No Customer found with this ID");
 		} else {

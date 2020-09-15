@@ -42,8 +42,9 @@ public class Address {
 	private Boolean isBilling;
 	@JsonBackReference
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "updated_by", referencedColumnName = "userId")
+	@JoinColumn(name = "user_id", referencedColumnName = "userId")
 	private SsUser ssUser;
+	private long updatedBy;
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "dd/MM/yyyy", shape = Shape.STRING)
 	private Date lastUpdated;
@@ -56,7 +57,7 @@ public class Address {
 
 	public Address(long addressId, String addLine1, String addLine2, String addLine3, String addLine4,
 			String phoneNumber, String cellNumber, String faxNumber, String city, String state, String zipcode,
-			Boolean isPrimary, Boolean isMailing, Boolean isBilling, Date lastUpdated) {
+			Boolean isPrimary, Boolean isMailing, Boolean isBilling, long updatedBy,Date lastUpdated) {
 		super();
 		this.addressId = addressId;
 		this.addLine1 = addLine1;
@@ -72,6 +73,7 @@ public class Address {
 		this.isPrimary = isPrimary;
 		this.isMailing = isMailing;
 		this.isBilling = isBilling;
+		this.updatedBy= updatedBy;
 		this.lastUpdated = lastUpdated;
 	}
 
@@ -193,6 +195,15 @@ public class Address {
 
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+	
+
+	public long getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(long updatedBy) {
+		this.updatedBy = updatedBy;
 	}
 
 	public SsUser getSsUser() {

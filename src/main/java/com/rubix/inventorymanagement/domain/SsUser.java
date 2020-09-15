@@ -18,7 +18,6 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -42,9 +41,6 @@ public class SsUser {
 	@JsonManagedReference
 	@OneToMany(mappedBy = "ssUser", cascade = CascadeType.REMOVE)
 	private List<Address> address;
-	@JsonIgnore
-	@OneToMany(mappedBy = "ssUser", cascade = CascadeType.REMOVE)
-	private List<Customer> customer;
 
 	public SsUser() {
 	}
@@ -121,14 +117,6 @@ public class SsUser {
 
 	public void setAddress(List<Address> address) {
 		this.address = address;
-	}
-
-	public List<Customer> getCustomer() {
-		return customer;
-	}
-
-	public void setCustomer(List<Customer> customer) {
-		this.customer = customer;
 	}
 
 }

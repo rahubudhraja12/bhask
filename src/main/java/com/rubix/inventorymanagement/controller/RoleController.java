@@ -45,8 +45,8 @@ public class RoleController {
 	}
 
 	@PutMapping("updateRole")
-	public ResponseEntity<Object> updateRoles(@RequestBody SsRole role, @RequestParam(value = "roleId",required=true) Long roleId)
-			throws Exception {
+	public ResponseEntity<Object> updateRoles(@RequestBody SsRole role,
+			@RequestParam(value = "roleId", required = true) Long roleId) throws Exception {
 		return roleService.updateRole(role, roleId);
 	}
 
@@ -61,14 +61,15 @@ public class RoleController {
 	}
 
 	@PostMapping("saveGroup")
-	public ResponseEntity<Object> addGroups(@RequestBody SsGroup group, @RequestParam(value = "roleId",required=true) Long roleId)
-			throws Exception {
+	public ResponseEntity<Object> addGroups(@RequestBody SsGroup group,
+			@RequestParam(value = "roleId", required = true) Long roleId) throws Exception {
 		return groupService.createGroup(group, roleId);
 	}
 
 	@PutMapping("updateGroup")
-	public ResponseEntity<Object> updateGroups(@RequestBody SsGroup group, @RequestParam(value = "roleId",required=true) Long roleId,
-			@RequestParam(value = "groupId") Long groupId) throws Exception {
+	public ResponseEntity<Object> updateGroups(@RequestBody SsGroup group,
+			@RequestParam(value = "roleId", required = true) Long roleId, @RequestParam(value = "groupId") Long groupId)
+			throws Exception {
 		return groupService.updateGroup(group, roleId, groupId);
 	}
 
@@ -84,14 +85,15 @@ public class RoleController {
 	}
 
 	@PostMapping("saveUser")
-	public ResponseEntity<Object> addUser(@RequestBody SsUser user, @RequestParam(value = "groupId",required=true) Long groupId)
-			throws Exception {
+	public ResponseEntity<Object> addUser(@RequestBody SsUser user,
+			@RequestParam(value = "groupId", required = true) Long groupId) throws Exception {
 		return userService.createUser(user, groupId);
 	}
 
 	@PutMapping("updateUser")
-	public ResponseEntity<Object> updateUsers(@RequestBody SsUser user, @RequestParam(value = "groupId",required=true) Long groupId,
-			@RequestParam(value = "userId") Long userId) throws Exception {
+	public ResponseEntity<Object> updateUsers(@RequestBody SsUser user,
+			@RequestParam(value = "groupId", required = true) Long groupId, @RequestParam(value = "userId") Long userId)
+			throws Exception {
 		return userService.updateUser(user, groupId, userId);
 	}
 
@@ -107,15 +109,15 @@ public class RoleController {
 	}
 
 	@PostMapping("saveAddress")
-	public ResponseEntity<Object> addAddress(@RequestBody Address address, @RequestParam(value = "userId",required=true) Long userId)
-			throws Exception {
+	public ResponseEntity<Object> addAddress(@RequestBody Address address,
+			@RequestParam(value = "userId", required = true) Long userId) throws Exception {
 		return addressService.createAddress(address, userId);
 	}
 
 	@PutMapping("updateAddress")
 	public ResponseEntity<Object> updateAddress(@RequestBody Address address,
-			@RequestParam(value = "userId") Long userId, @RequestParam(value = "addressId",required=true) Long addressId)
-			throws Exception {
+			@RequestParam(value = "userId") Long userId,
+			@RequestParam(value = "addressId", required = true) Long addressId) throws Exception {
 		return addressService.updateAddress(address, userId, addressId);
 	}
 
@@ -132,21 +134,21 @@ public class RoleController {
 
 	@PostMapping("saveCustomer")
 	public ResponseEntity<Object> addCustomer(@RequestBody Customer customer,
-			@RequestParam(value = "userId",required=true) Long userId,@RequestParam(value = "addressId",required=true) Long addressId)
-			throws Exception {
-		return customerService.addCustomer(customer, userId, addressId);
+			@RequestParam(value = "addressId", required = true) Long addressId) throws Exception {
+		return customerService.addCustomer(customer, addressId);
 	}
 
 	@PutMapping("updateCustomer")
 	public ResponseEntity<Object> updateCustomer(@RequestBody Customer customer,
-			@RequestParam(value = "userId",required=true) Long userId,@RequestParam(value = "addressId",required=true) Long addressId,
-			@RequestParam(value = "customerId",required=true) Long customerId) throws Exception {
-		return customerService.updateCustomer(customer, userId, addressId, customerId);
+			@RequestParam(value = "addressId", required = true) Long addressId,
+			@RequestParam(value = "customerId", required = true) Long customerId) throws Exception {
+		return customerService.updateCustomer(customer, addressId, customerId);
 	}
 
-	@DeleteMapping("deleteCustomer/{customerId}")
-	public ResponseEntity<?> deleteCustomer(@PathVariable(value = "customerId") Long customerId) {
-		return customerService.deleteCustomer(customerId);
+	@DeleteMapping("deleteCustomer/{addressId}/{customerId}")
+	public ResponseEntity<?> deleteCustomer(@PathVariable(value = "customerId") Long customerId,
+			@RequestParam(value = "addressId", required = true) Long addressId) {
+		return customerService.deleteCustomer(addressId, customerId);
 	}
 
 	@GetMapping("getCustomersAll")
