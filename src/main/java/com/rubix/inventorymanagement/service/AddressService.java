@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.Address;
 import com.rubix.inventorymanagement.domain.SsUser;
-import com.rubix.inventorymanagement.exception.ProductException;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.AddressRepository;
 import com.rubix.inventorymanagement.repository.SsUserRepository;
 
@@ -26,10 +26,10 @@ public class AddressService {
 		return address;
 	}
 
-	public ResponseEntity<Object> createAddress(Address address, long userId) throws Exception, ProductException {
+	public ResponseEntity<Object> createAddress(Address address, long userId) throws Exception, IdNotFoundException {
 		SsUser users = userRepository.findByUserId(userId);
 		if (users == null) {
-			throw new ProductException("User ID not Found");
+			throw new IdNotFoundException("User ID not Found");
 		} else {
 			Address addresses = new Address();
 			BeanUtils.copyProperties(address, addresses, "ssUser", "customer");
@@ -45,11 +45,11 @@ public class AddressService {
 
 	@Transactional
 	public ResponseEntity<Object> updateAddress(Address address, long userId, long addressId)
-			throws Exception, ProductException {
+			throws Exception, IdNotFoundException {
 		SsUser users = userRepository.findByUserId(userId);
 		Address addresses = addressRepository.findByAddressId(addressId);
 		if (users == null || addresses == null) {
-			throw new ProductException("No Address  found with this ID");
+			throw new IdNotFoundException("No Address  found with this ID");
 		} else {
 			BeanUtils.copyProperties(address, addresses, "ssUser", "customer");
 			addresses.setSsUser(users);
@@ -64,11 +64,11 @@ public class AddressService {
 
 	}
 
-	public ResponseEntity<?> deleteAddress(long userId, long addressId) {
+	public ResponseEntity<?> deleteAddress(long userId, long addressId)throws Exception, IdNotFoundException {
 
 		Address address = addressRepository.findByUserIdAndAddressId(userId, addressId);
 		if (address == null) {
-			return ResponseEntity.unprocessableEntity().body("No Address ID found with User ID");
+			throw new IdNotFoundException("No Address ID found with User ID");
 		} else {
 
 			addressRepository.delete(address);

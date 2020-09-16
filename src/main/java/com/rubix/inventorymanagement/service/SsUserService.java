@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.SsGroup;
 import com.rubix.inventorymanagement.domain.SsUser;
-import com.rubix.inventorymanagement.exception.ProductException;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.SsGroupRepository;
 import com.rubix.inventorymanagement.repository.SsUserRepository;
 
@@ -27,10 +27,10 @@ public class SsUserService {
 		return users;
 	}
 
-	public ResponseEntity<Object> createUser(SsUser user, long groupId) throws Exception, ProductException {
+	public ResponseEntity<Object> createUser(SsUser user, long groupId) throws Exception, IdNotFoundException {
 		SsGroup groups = groupRepository.findByGroupId(groupId);
 		if (groups == null) {
-			throw new ProductException("Group ID not Found");
+			throw new IdNotFoundException("Group ID not Found");
 		} else {
 			SsUser users = new SsUser();
 			BeanUtils.copyProperties(user, users, "ssGroup", "address", "customer");
@@ -46,11 +46,11 @@ public class SsUserService {
 
 	@Transactional
 	public ResponseEntity<Object> updateUser(SsUser user, long groupId, long userId)
-			throws Exception, ProductException {
+			throws Exception, IdNotFoundException {
 		SsGroup groups = groupRepository.findByGroupId(groupId);
 		SsUser users = userRepository.findByUserId(userId);
 		if (groups == null || users == null) {
-			throw new ProductException("No Users  found with this ID");
+			throw new IdNotFoundException("No Users  found with this ID");
 		} else {
 			BeanUtils.copyProperties(user, users, "ssGroup", "address", "customer");
 			users.setSsGroup(groups);
@@ -65,11 +65,11 @@ public class SsUserService {
 
 	}
 
-	public ResponseEntity<?> deleteUser(long groupId, long userId) {
+	public ResponseEntity<?> deleteUser(long groupId, long userId)throws Exception, IdNotFoundException {
 
 		SsUser users = userRepository.findByGroupIdAndUserId(groupId, userId);
 		if (users == null) {
-			return ResponseEntity.unprocessableEntity().body("No Group ID found with User ID");
+			throw new IdNotFoundException("No Group ID found with User ID");
 		} else {
 
 			userRepository.delete(users);

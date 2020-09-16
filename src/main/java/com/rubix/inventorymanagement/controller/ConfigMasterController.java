@@ -45,7 +45,7 @@ public class ConfigMasterController {
 	}
 
 	@DeleteMapping("deleteConfig/{masterId}")
-	public ResponseEntity<?> deleteConfig(@PathVariable(value = "masterId") long masterId) {
+	public ResponseEntity<?> deleteConfig(@PathVariable(value = "masterId") long masterId)throws Exception {
 		return configService.deleteConfig(masterId);
 
 	}

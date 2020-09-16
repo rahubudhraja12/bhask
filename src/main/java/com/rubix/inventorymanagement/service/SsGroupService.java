@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.SsGroup;
 import com.rubix.inventorymanagement.domain.SsRole;
-import com.rubix.inventorymanagement.exception.ProductException;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.SsGroupRepository;
 import com.rubix.inventorymanagement.repository.SsRoleRepository;
 
@@ -26,10 +26,10 @@ public class SsGroupService {
 		return groups;
 	}
 
-	public ResponseEntity<Object> createGroup(SsGroup group, long roleId) throws Exception, ProductException {
+	public ResponseEntity<Object> createGroup(SsGroup group, long roleId) throws Exception, IdNotFoundException {
 		SsRole roles = roleRepository.findByRoleId(roleId);
 		if (roles == null) {
-			throw new ProductException("Role ID not Found");
+			throw new IdNotFoundException("Role ID not Found");
 		} else {
 			SsGroup groups = new SsGroup();
 			BeanUtils.copyProperties(group, groups, "ssRole", "ssUser");
@@ -45,11 +45,11 @@ public class SsGroupService {
 
 	@Transactional
 	public ResponseEntity<Object> updateGroup(SsGroup group, long roleId, long groupId)
-			throws Exception, ProductException {
+			throws Exception, IdNotFoundException {
 		SsRole roles = roleRepository.findByRoleId(roleId);
 		SsGroup groups = groupRepository.findByGroupId(groupId);
 		if (roles == null || groups == null) {
-			throw new ProductException("No groups found with this ID");
+			throw new IdNotFoundException("No groups found with this ID");
 		} else {
 
 			BeanUtils.copyProperties(group, groups, "ssRole", "ssUser");
@@ -65,11 +65,11 @@ public class SsGroupService {
 
 	}
 
-	public ResponseEntity<?> deleteGroup(long roleId, long groupId) {
+	public ResponseEntity<?> deleteGroup(long roleId, long groupId)throws Exception, IdNotFoundException  {
 
 		SsGroup groups = groupRepository.findByRoleIdAndGroupId(roleId, groupId);
 		if (groups == null) {
-			return ResponseEntity.unprocessableEntity().body("No Group ID found with Role ID");
+			throw new IdNotFoundException("No Group ID found with Role ID");
 		} else {
 
 			groupRepository.delete(groups);

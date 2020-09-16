@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.*;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.*;
 import com.rubix.inventorymanagement.repository.ProductRepository;
 
@@ -39,13 +40,13 @@ public class CatalogItemService {
 
 	@Transactional
 	public ResponseEntity<Object> updateCatalog(CatalogItem catalogs, long productId, long itemId, long catalogId)
-			throws Exception {
+			throws Exception, IdNotFoundException{
 		Product product = productRepository.findByProductId(productId);
 		Item item = itemRepository.findByItemId(itemId);
 		CatalogItem catalog = catalogItemRepository.findByCatalogId(catalogId);
 
 		if (product == null || item == null || catalog == null) {
-			return ResponseEntity.unprocessableEntity().body(" Category or product not found with this ID");
+			throw new IdNotFoundException(" Catalog or product not found with this ID");
 		} else {
 			BeanUtils.copyProperties(catalogs, catalog, "item", "product", "catalogId");
 			catalog.setProduct(product);
@@ -61,11 +62,11 @@ public class CatalogItemService {
 
 	}
 
-	public ResponseEntity<?> deleteCatalog(long catalogId) {
+	public ResponseEntity<?> deleteCatalog(long catalogId)throws Exception, IdNotFoundException {
 
 		CatalogItem catalog = catalogItemRepository.findByCatalogId(catalogId);
 		if (catalog == null) {
-			return ResponseEntity.unprocessableEntity().body("No Catalog found with this ID");
+			throw new IdNotFoundException("No Catalog found with this ID");
 		} else {
 			catalogItemRepository.delete(catalog);
 			return ResponseEntity.ok("Catalog Deleted");

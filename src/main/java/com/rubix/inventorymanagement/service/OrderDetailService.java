@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.OrderAddressDetail;
 import com.rubix.inventorymanagement.domain.OrderDetail;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.OrderAddressDetailRepository;
 import com.rubix.inventorymanagement.repository.OrderDetailRepository;
 
@@ -32,8 +33,11 @@ public class OrderDetailService {
 			return ResponseEntity.unprocessableEntity().body("Failed to add order");
 	}
 	@Transactional
-	public ResponseEntity<Object> updateOrder(OrderDetail order, Long orderId) throws Exception {
+	public ResponseEntity<Object> updateOrder(OrderDetail order, Long orderId) throws Exception ,IdNotFoundException {
 		OrderDetail orders = orderRepository.findByOrderId(orderId);
+		if (orders==null) {
+			throw new IdNotFoundException("No order found with this ID");
+		}
 		BeanUtils.copyProperties(order, orders, "orderAddressDetail", "orderId");
 		orders.setOrderId(orderId);
 		OrderDetail savedOrder = orderRepository.save(orders);
@@ -49,11 +53,11 @@ public class OrderDetailService {
 			return ResponseEntity.unprocessableEntity().body("Failed to update order");
 	}
 
-	public ResponseEntity<?> deleteOrder(long orderId) {
+	public ResponseEntity<?> deleteOrder(long orderId)throws Exception ,IdNotFoundException {
 
 		OrderDetail order = orderRepository.findByOrderId(orderId);
 		if (order == null) {
-			return ResponseEntity.unprocessableEntity().body("No order found with this ID");
+			throw new IdNotFoundException("No order found with this ID");
 		} else {
 			orderRepository.delete(order);
 			return ResponseEntity.ok("Order Deleted");

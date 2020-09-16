@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.ConfigMaster;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.ConfigMasterRepository;
 
 @Service
@@ -29,11 +30,11 @@ public class ConfigMasterService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> updateConfig(ConfigMaster config, long masterId) throws Exception {
+	public ResponseEntity<Object> updateConfig(ConfigMaster config, long masterId) throws Exception ,IdNotFoundException{
 		ConfigMaster configs = new ConfigMaster();
 		configs = configRepository.findByMasterId(masterId);
 		if (configs == null) {
-			return ResponseEntity.unprocessableEntity().body(" Configuration not found with this ID");
+			throw new IdNotFoundException(" Configuration not found with this ID");
 		} else {
 			BeanUtils.copyProperties(config, configs);
 			configs.setMasterId(masterId);
@@ -47,11 +48,11 @@ public class ConfigMasterService {
 
 	}
 
-	public ResponseEntity<?> deleteConfig(long masterId) {
+	public ResponseEntity<?> deleteConfig(long masterId) throws Exception ,IdNotFoundException{
 
 		ConfigMaster config = configRepository.findByMasterId(masterId);
 		if (config == null) {
-			return ResponseEntity.unprocessableEntity().body("No Configuration found with this ID");
+			throw new IdNotFoundException("No Configuration found with this ID");
 		} else {
 			configRepository.delete(config);
 			return ResponseEntity.ok("Configuration Deleted");

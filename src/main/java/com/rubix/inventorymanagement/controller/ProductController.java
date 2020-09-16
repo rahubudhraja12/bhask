@@ -73,7 +73,7 @@ public class ProductController {
 	}
 
 	@DeleteMapping("deleteCatalog/{catalogId}")
-	public ResponseEntity<?> deleteCatalog(@PathVariable(value = "catalogId") Long catalogId) {
+	public ResponseEntity<?> deleteCatalog(@PathVariable(value = "catalogId") Long catalogId) throws Exception {
 		return catalogService.deleteCatalog(catalogId);
 
 	}
@@ -121,7 +121,7 @@ public class ProductController {
 	 * @return ResponseEntity
 	 */
 	@DeleteMapping("deleteCategory/{categoryId}")
-	public ResponseEntity<?> deleteCategory(@PathVariable(value = "categoryId") Long categoryId) {
+	public ResponseEntity<?> deleteCategory(@PathVariable(value = "categoryId") Long categoryId)throws Exception {
 		return categoryService.deleteCategory(categoryId);
 
 	}
@@ -180,7 +180,7 @@ public class ProductController {
 	 * @return ResponseEntity
 	 */
 	@DeleteMapping("deleteProduct/{productId}")
-	public ResponseEntity<?> deleteProduct(@PathVariable(value = "productId") Long productId) {
+	public ResponseEntity<?> deleteProduct(@PathVariable(value = "productId") Long productId)  throws Exception{
 		return productService.deleteProduct(productId);
 
 	}
@@ -228,7 +228,7 @@ public class ProductController {
 	 */
 	@DeleteMapping("deleteItem/{productId}/{itemId}")
 	public ResponseEntity<?> deleteItem(@PathVariable(value = "productId") Long productId,
-			@PathVariable(value = "itemId") Long itemId) {
+			@PathVariable(value = "itemId") Long itemId) throws Exception {
 		return itemService.deleteItem(productId, itemId);
 
 	}

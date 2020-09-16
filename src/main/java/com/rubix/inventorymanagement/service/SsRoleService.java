@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.SsRole;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.SsRoleRepository;
 
 @Service
@@ -36,11 +37,11 @@ public class SsRoleService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> updateRole(SsRole role, long roleId) throws Exception {
+	public ResponseEntity<Object> updateRole(SsRole role, long roleId) throws Exception,IdNotFoundException {
 		SsRole roles = new SsRole();
 		roles = ssRoleRepository.findByRoleId(roleId);
 		if (roles == null) {
-			return ResponseEntity.unprocessableEntity().body(" Role  not found with this ID");
+			throw new Exception(" Role  not found with this ID");
 		} else {
 			BeanUtils.copyProperties(role, roles);
 			roles.setRoleId(roleId);
@@ -55,11 +56,11 @@ public class SsRoleService {
 
 	}
 
-	public ResponseEntity<?> deleteRole(long roleId) {
+	public ResponseEntity<?> deleteRole(long roleId)throws Exception,IdNotFoundException {
 
 		SsRole roles = ssRoleRepository.findByRoleId(roleId);
 		if (roles == null) {
-			return ResponseEntity.unprocessableEntity().body("No Roles found with this ID");
+			throw new Exception("No Roles found with this ID");
 		} else {
 			ssRoleRepository.delete(roles);
 			return ResponseEntity.ok("Role removed");

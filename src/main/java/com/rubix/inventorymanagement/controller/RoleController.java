@@ -51,7 +51,7 @@ public class RoleController {
 	}
 
 	@DeleteMapping("deleteRole/{roleId}")
-	public ResponseEntity<?> deleteRoles(@PathVariable(value = "roleId") Long roleId) {
+	public ResponseEntity<?> deleteRoles(@PathVariable(value = "roleId") Long roleId)throws Exception {
 		return roleService.deleteRole(roleId);
 	}
 
@@ -75,7 +75,7 @@ public class RoleController {
 
 	@DeleteMapping("deleteGroup/{roleId}/{groupId}")
 	public ResponseEntity<?> deleteGroups(@PathVariable(value = "roleId") Long roleId,
-			@PathVariable(value = "groupId") Long groupId) {
+			@PathVariable(value = "groupId") Long groupId)throws Exception {
 		return groupService.deleteGroup(roleId, groupId);
 	}
 
@@ -99,7 +99,7 @@ public class RoleController {
 
 	@DeleteMapping("deleteUser/{groupId}/{userId}")
 	public ResponseEntity<?> deleteUsers(@PathVariable(value = "groupId") Long groupId,
-			@PathVariable(value = "userId") Long userId) {
+			@PathVariable(value = "userId") Long userId) throws Exception{
 		return userService.deleteUser(groupId, userId);
 	}
 
@@ -123,7 +123,7 @@ public class RoleController {
 
 	@DeleteMapping("deleteAddress/{userId}/{addressId}")
 	public ResponseEntity<?> deleteAddress(@PathVariable(value = "userId") Long userId,
-			@PathVariable(value = "addressId") Long addressId) {
+			@PathVariable(value = "addressId") Long addressId)throws Exception {
 		return addressService.deleteAddress(userId, addressId);
 	}
 
@@ -147,7 +147,7 @@ public class RoleController {
 
 	@DeleteMapping("deleteCustomer/{addressId}/{customerId}")
 	public ResponseEntity<?> deleteCustomer(@PathVariable(value = "customerId") Long customerId,
-			@RequestParam(value = "addressId", required = true) Long addressId) {
+			@RequestParam(value = "addressId", required = true) Long addressId)throws Exception {
 		return customerService.deleteCustomer(addressId, customerId);
 	}
 

@@ -23,10 +23,10 @@ public class ItemService {
 	@Autowired
 	private ItemImagesRepository itemImagesRepository;
 
-	public ResponseEntity<Object> addItem(Item items, long productId) throws Exception, ProductException {
+	public ResponseEntity<Object> addItem(Item items, long productId) throws Exception, IdNotFoundException {
 		Product product = productRepository.findByProductId(productId);
 		if (product == null) {
-			throw new ProductException("Product ID not Found");
+			throw new IdNotFoundException("Product ID not Found");
 		} else {
 			Item item = new Item();
 			BeanUtils.copyProperties(items, item, "itemImages", "product");
@@ -45,12 +45,13 @@ public class ItemService {
 	}
 	@Transactional
 	public ResponseEntity<Object> updateItem(Item items, long productId, long itemId)
-			throws Exception, ProductException {
+			throws Exception, IdNotFoundException {
 		Product product = productRepository.findByProductId(productId);
-		if (product == null) {
-			throw new ProductException("No Product found with this ID");
+		Item item = itemRepository.findByItemId(itemId);
+		if (product == null||item==null) {
+			throw new IdNotFoundException(" Product or Item not found with this ID");
 		} else {
-			Item item = itemRepository.findByItemId(itemId);
+			
 			BeanUtils.copyProperties(item, items, "itemImages", "product", "itemId");
 			item.setItemId(itemId);
 			item.setProduct(product);
@@ -69,11 +70,11 @@ public class ItemService {
 
 	}
 
-	public ResponseEntity<?> deleteItem(long productId, long itemId) {
+	public ResponseEntity<?> deleteItem(long productId, long itemId)throws Exception, IdNotFoundException {
 
 		Item item = itemRepository.findByProductIdAndItemId(productId, itemId);
 		if (item == null) {
-			return ResponseEntity.unprocessableEntity().body("No Product ID found with Item ID");
+			throw new IdNotFoundException("No Product ID found with Item ID");
 		} else {
 
 			itemRepository.delete(item);

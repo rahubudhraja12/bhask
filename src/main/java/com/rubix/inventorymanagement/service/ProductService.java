@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.Product;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.ProductRepository;
 
 @Service
@@ -30,11 +31,11 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> updateProduct(Product products, long productId) throws Exception {
+	public ResponseEntity<Object> updateProduct(Product products, long productId) throws Exception,IdNotFoundException {
 		Product product = new Product();
 		product = productRepository.findByProductId(productId);
 		if (product == null) {
-			return ResponseEntity.unprocessableEntity().body("  product not found with this ID");
+			throw new IdNotFoundException("  product not found with this ID");
 		} else {
 			BeanUtils.copyProperties(products, product, "items", "productId", "catalog");
 			product.setProductId(productId);
@@ -48,11 +49,11 @@ public class ProductService {
 
 	}
 
-	public ResponseEntity<?> deleteProduct(long productId) {
+	public ResponseEntity<?> deleteProduct(long productId)throws Exception,IdNotFoundException {
 
 		Product product = productRepository.findByProductId(productId);
 		if (product == null) {
-			return ResponseEntity.unprocessableEntity().body("No Product found with this ID");
+			throw new IdNotFoundException("No Product found with this ID");
 		} else {
 			productRepository.delete(product);
 			return ResponseEntity.ok("product Deleted");

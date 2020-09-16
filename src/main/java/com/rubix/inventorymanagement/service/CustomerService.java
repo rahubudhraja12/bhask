@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.*;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.*;
 
 @Service
@@ -23,12 +24,12 @@ public class CustomerService {
 		return customer;
 	}
 
-	public ResponseEntity<Object> addCustomer(Customer customer,long addressId) throws Exception {
+	public ResponseEntity<Object> addCustomer(Customer customer,long addressId)  throws Exception, IdNotFoundException {
 
 		Address addresses = addressRepository.findByAddressId(addressId);
 		Customer customers = new Customer();
 		if ( addresses == null ) {
-			return ResponseEntity.unprocessableEntity().body("  Address ID doesn't Exit");
+			throw new IdNotFoundException("  Address ID doesn't Exit");
 		} else {
 		BeanUtils.copyProperties(customer, customers, "address");
 		customers.setAddress(addresses);
@@ -43,13 +44,13 @@ public class CustomerService {
 
 	@Transactional
 	public ResponseEntity<Object> updateCustomer(Customer customer,long addressId, long customerId)
-			throws Exception {
+			 throws Exception, IdNotFoundException {
 
 		Address addresses = addressRepository.findByAddressId(addressId);
 		Customer customers = customerRepository.findByCustomerId(customerId);
 
 		if (addresses == null || customers == null) {
-			return ResponseEntity.unprocessableEntity().body("  Address ID or customer ID doesnt exist");
+			throw new IdNotFoundException("  Address ID or customer ID doesnt exist");
 		} else {
 			BeanUtils.copyProperties(customer, customers, "address");
 			customers.setAddress(addresses);
@@ -64,7 +65,7 @@ public class CustomerService {
 
 	}
 
-	public ResponseEntity<?> deleteCustomer(long addressId,long customerId) {
+	public ResponseEntity<?> deleteCustomer(long addressId,long customerId) throws Exception, IdNotFoundException {
 
 		Customer customers = customerRepository.findByCustomerIdAndAddressId(customerId,addressId);
 		if (customers == null) {

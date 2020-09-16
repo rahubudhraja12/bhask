@@ -44,7 +44,7 @@ public class OrderController {
 	}
 
 	@DeleteMapping("deleteOrder/{orderId}")
-	public ResponseEntity<?> deleteOrder(@PathVariable(value = "orderId") Long orderId) {
+	public ResponseEntity<?> deleteOrder(@PathVariable(value = "orderId") Long orderId)throws Exception {
 		return orderService.deleteOrder(orderId);
 
 	}

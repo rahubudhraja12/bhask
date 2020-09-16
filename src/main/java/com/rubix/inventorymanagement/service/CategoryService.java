@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rubix.inventorymanagement.domain.Category;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.CategoryRepository;
 
 @Service
@@ -27,13 +28,14 @@ public class CategoryService {
 			return ResponseEntity.unprocessableEntity().body("Failed to add Category");
 
 	}
+
 	@Transactional
-	public ResponseEntity<Object> updateCategory(Category categorys, long categoryId) throws Exception {
+	public ResponseEntity<Object> updateCategory(Category categorys, long categoryId) throws Exception,IdNotFoundException {
 
 		Category category = new Category();
 		category = categoryRepository.findByCategoryId(categoryId);
 		if (category == null) {
-			return ResponseEntity.unprocessableEntity().body("No Category found with this ID");
+			throw new IdNotFoundException("No Category found with this ID");
 		} else {
 			BeanUtils.copyProperties(categorys, category, "categoryId", "product");
 			category.setCategoryId(categoryId);
@@ -47,11 +49,11 @@ public class CategoryService {
 
 	}
 
-	public ResponseEntity<?> deleteCategory(long categoryId) {
+	public ResponseEntity<?> deleteCategory(long categoryId) throws Exception,IdNotFoundException{
 
 		Category category = categoryRepository.findByCategoryId(categoryId);
 		if (category == null) {
-			return ResponseEntity.unprocessableEntity().body("No Category found with this ID");
+			throw new IdNotFoundException("No Category found with this ID");
 		} else {
 			categoryRepository.delete(category);
 			return ResponseEntity.ok("Category Deleted");

@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
      * @param request
      * @return
      */
-    @ExceptionHandler(ProductException.class)
-    public ResponseEntity<?> resourceNotFoundException(ProductException ex, WebRequest request) {
+    @ExceptionHandler(IdNotFoundException.class)
+    public ResponseEntity<?> resourceNotFoundException(IdNotFoundException ex, WebRequest request) {
          ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
          return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     } 
