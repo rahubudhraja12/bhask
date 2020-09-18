@@ -1,7 +1,13 @@
 package com.rubix.inventorymanagement.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +21,22 @@ public class ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
-	
+
+	public List<Product> findAllProduct(Integer pageNo, Integer pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize);
+		Page<Product> pagedResult = productRepository.findAll(paging);
+
+		if (pagedResult.hasContent()) {
+			return pagedResult.getContent();
+		} else {
+			return new ArrayList<Product>();
+		}
+	}
+
 	public ResponseEntity<Object> addProduct(Product products) throws Exception {
 
 		Product product = new Product();
 		BeanUtils.copyProperties(products, product, "items", "catalog");
-
 		Product savedProduct = productRepository.save(product);
 		Product productExist = productRepository.findByProductId(savedProduct.getProductId());
 		if (productExist != null)
@@ -31,7 +47,8 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> updateProduct(Product products, long productId) throws Exception,IdNotFoundException {
+	public ResponseEntity<Object> updateProduct(Product products, long productId)
+			throws Exception, IdNotFoundException {
 		Product product = new Product();
 		product = productRepository.findByProductId(productId);
 		if (product == null) {
@@ -49,7 +66,7 @@ public class ProductService {
 
 	}
 
-	public ResponseEntity<?> deleteProduct(long productId)throws Exception,IdNotFoundException {
+	public ResponseEntity<?> deleteProduct(long productId) throws Exception, IdNotFoundException {
 
 		Product product = productRepository.findByProductId(productId);
 		if (product == null) {

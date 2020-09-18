@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -23,9 +23,10 @@ public class ItemImages {
 	private String imageURL;
 	private String imageSequence;
 	private String imagePrimaryColor;
-	private String imageFace;
+	private String imageType;
+	private String imageMetadata;
 	@JsonIgnore
-	@OneToOne(optional = false)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "item_id", referencedColumnName = "itemId")
 	private Item item;
 
@@ -33,13 +34,15 @@ public class ItemImages {
 
 	}
 
-	public ItemImages(long imageID, String imageURL, String imageSequence, String imagePrimaryColor, String imageFace) {
+	public ItemImages(long imageID, String imageURL, String imageSequence, String imagePrimaryColor, String imageType,
+			String imageMetadata) {
 		super();
 		this.imageID = imageID;
 		this.imageURL = imageURL;
 		this.imageSequence = imageSequence;
 		this.imagePrimaryColor = imagePrimaryColor;
-		this.imageFace = imageFace;
+		this.imageType = imageType;
+		this.imageMetadata = imageMetadata;
 	}
 
 	public long getImageID() {
@@ -74,12 +77,20 @@ public class ItemImages {
 		this.imagePrimaryColor = imagePrimaryColor;
 	}
 
-	public String getImageFace() {
-		return imageFace;
+	public String getImageType() {
+		return imageType;
 	}
 
-	public void setImageFace(String imageFace) {
-		this.imageFace = imageFace;
+	public void setImageType(String imageType) {
+		this.imageType = imageType;
+	}
+
+	public String getImageMetadata() {
+		return imageMetadata;
+	}
+
+	public void setImageMetadata(String imageMetadata) {
+		this.imageMetadata = imageMetadata;
 	}
 
 	public Item getItem() {

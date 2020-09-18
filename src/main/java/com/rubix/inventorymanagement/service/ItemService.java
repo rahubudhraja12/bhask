@@ -1,18 +1,20 @@
 package com.rubix.inventorymanagement.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.rubix.inventorymanagement.domain.Product;
-import com.rubix.inventorymanagement.repository.ProductRepository;
 import com.rubix.inventorymanagement.domain.Item;
-import com.rubix.inventorymanagement.repository.ItemRepository;
 import com.rubix.inventorymanagement.domain.ItemImages;
+import com.rubix.inventorymanagement.domain.Product;
+import com.rubix.inventorymanagement.exception.IdNotFoundException;
 import com.rubix.inventorymanagement.repository.ItemImagesRepository;
-import com.rubix.inventorymanagement.exception.*;
+import com.rubix.inventorymanagement.repository.ItemRepository;
+import com.rubix.inventorymanagement.repository.ProductRepository;
 
 @Service
 public class ItemService {
@@ -32,10 +34,12 @@ public class ItemService {
 			BeanUtils.copyProperties(items, item, "itemImages", "product");
 			item.setProduct(product);
 			Item savedItems = itemRepository.save(item);
-			ItemImages img = new ItemImages();
-			img = items.getItemImages();
-			img.setItem(savedItems);
-			itemImagesRepository.save(img);
+			List<ItemImages> images = items.getItemImages();
+			for (ItemImages img : images) {
+				BeanUtils.copyProperties(images, img, "item");
+				img.setItem(savedItems);
+				itemImagesRepository.save(img);
+			}
 
 			if (savedItems != null)
 				return ResponseEntity.ok("Item Added");
@@ -43,25 +47,27 @@ public class ItemService {
 				return ResponseEntity.unprocessableEntity().body("Failed to add item");
 		}
 	}
+
 	@Transactional
 	public ResponseEntity<Object> updateItem(Item items, long productId, long itemId)
 			throws Exception, IdNotFoundException {
 		Product product = productRepository.findByProductId(productId);
 		Item item = itemRepository.findByItemId(itemId);
-		if (product == null||item==null) {
+		if (product == null || item == null) {
 			throw new IdNotFoundException(" Product or Item not found with this ID");
 		} else {
-			
-			BeanUtils.copyProperties(item, items, "itemImages", "product", "itemId");
+
+			BeanUtils.copyProperties(items, item, "itemImages", "product", "itemId");
 			item.setItemId(itemId);
 			item.setProduct(product);
 			Item savedItems = itemRepository.save(item);
-			ItemImages img = new ItemImages();
-			long itemImgId = itemImagesRepository.findItemImageIdByItemId(itemId);
-			img = items.getItemImages();
-			img.setItem(savedItems);
-			img.setImageID(itemImgId);
-			itemImagesRepository.save(img);
+			List<ItemImages> images = items.getItemImages();
+			for (ItemImages img : images) {
+				BeanUtils.copyProperties(images, img, "item");
+				img.setItem(savedItems);
+				itemImagesRepository.save(img);
+			}
+
 			if (savedItems != null)
 				return ResponseEntity.ok("Item Updated");
 			else
@@ -70,7 +76,7 @@ public class ItemService {
 
 	}
 
-	public ResponseEntity<?> deleteItem(long productId, long itemId)throws Exception, IdNotFoundException {
+	public ResponseEntity<?> deleteItem(long productId, long itemId) throws Exception, IdNotFoundException {
 
 		Item item = itemRepository.findByProductIdAndItemId(productId, itemId);
 		if (item == null) {

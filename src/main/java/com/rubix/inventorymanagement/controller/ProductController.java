@@ -143,8 +143,9 @@ public class ProductController {
 	 * @return List<Product>
 	 */
 	@GetMapping("getProductAll")
-	public List<Product> getAll() {
-		return productRepository.findAll();
+	public List<Product> getAll( @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+		return productService.findAllProduct(pageNo,pageSize);
 
 	}
 

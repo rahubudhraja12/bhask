@@ -4,13 +4,14 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn ;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -34,9 +35,10 @@ public class Product {
 	@JsonFormat(shape = Shape.STRING)
 	private long productId;
 	private String productName;
+	private String productLongName;
 	private String productDescription;
 	private long quantity;
-	private String sku;
+	private String productSku;
 	private double purchasePrice;
 	private double salePrice;
 	private double comparePrice;
@@ -53,22 +55,21 @@ public class Product {
 	private float productHeight;
 	private String fabricmaterial_type1;
 	private String fabricmaterial_type2;
-	private String productStyle;
-	private String workType;
+	@Embedded
+	private Definitions definitions;
+	@Embedded
+	private Specifications specifications;
 	private long updatedBy;
 	private long starRating;
-	@ManyToMany(targetEntity=Category.class,fetch = FetchType.EAGER,cascade = {  CascadeType.MERGE,
+	@ManyToMany(targetEntity = Category.class, fetch = FetchType.EAGER, cascade = { CascadeType.MERGE,
 			CascadeType.REFRESH })
-	@JoinTable(
-	        name = "product_category", 
-	        joinColumns = { @JoinColumn(name = "product_id",referencedColumnName = "productId") }, 
-	        inverseJoinColumns = { @JoinColumn(name = "category_id",referencedColumnName = "categoryId") }
-	    )
+	@JoinTable(name = "product_category", joinColumns = {
+			@JoinColumn(name = "product_id", referencedColumnName = "productId") }, inverseJoinColumns = {
+					@JoinColumn(name = "category_id", referencedColumnName = "categoryId") })
 	private List<Category> category;
-	private String lastNoProductAdded;
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "dd/MM/yyyy", shape = Shape.STRING)
-	private Date lastDateProductAdded;
+	private Date lastUpdated;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
@@ -81,19 +82,19 @@ public class Product {
 
 	}
 
-	public Product(long productId, String productName, String productDescription, long quantity, String sku,
+	public Product(long productId, String productName,String productLongName, String productDescription, long quantity, String productSku,
 			double purchasePrice, double salePrice, double comparePrice, float discount, Boolean taxable,
 			double taxRate, boolean inStock, Boolean isActive, Boolean isFeature, Boolean isLatest, float productWeight,
 			float productLength, float productWidth, float productHeight, String fabricmaterial_type1,
-			String fabricmaterial_type2, String productStyle, String workType, long updatedBy, long starRating,
-			List<Category> category, String lastNoProductAdded, Date lastDateProductAdded, List<Item> items,
-			List<CatalogItem> catalog) {
+			String fabricmaterial_type2, long updatedBy, long starRating, List<Category> category,
+			String lastNoProductAdded, Date lastUpdated, List<Item> items, List<CatalogItem> catalog) {
 		super();
 		this.productId = productId;
 		this.productName = productName;
+		this.productLongName = productLongName;
 		this.productDescription = productDescription;
 		this.quantity = quantity;
-		this.sku = sku;
+		this.productSku= productSku;
 		this.purchasePrice = purchasePrice;
 		this.salePrice = salePrice;
 		this.comparePrice = comparePrice;
@@ -110,13 +111,10 @@ public class Product {
 		this.productHeight = productHeight;
 		this.fabricmaterial_type1 = fabricmaterial_type1;
 		this.fabricmaterial_type2 = fabricmaterial_type2;
-		this.productStyle = productStyle;
-		this.workType = workType;
 		this.updatedBy = updatedBy;
 		this.starRating = starRating;
 		this.category = category;
-		this.lastNoProductAdded = lastNoProductAdded;
-		this.lastDateProductAdded = lastDateProductAdded;
+		this.lastUpdated = lastUpdated;
 		this.items = items;
 		this.catalog = catalog;
 	}
@@ -153,12 +151,22 @@ public class Product {
 		this.quantity = quantity;
 	}
 
-	public String getSku() {
-		return sku;
+	
+
+	public String getProductLongName() {
+		return productLongName;
 	}
 
-	public void setSku(String sku) {
-		this.sku = sku;
+	public void setProductLongName(String productLongName) {
+		this.productLongName = productLongName;
+	}
+
+	public String getProductSku() {
+		return productSku;
+	}
+
+	public void setProductSku(String productSku) {
+		this.productSku = productSku;
 	}
 
 	public double getPurchasePrice() {
@@ -289,22 +297,6 @@ public class Product {
 		this.fabricmaterial_type2 = fabricmaterial_type2;
 	}
 
-	public String getProductStyle() {
-		return productStyle;
-	}
-
-	public void setProductStyle(String productStyle) {
-		this.productStyle = productStyle;
-	}
-
-	public String getWorkType() {
-		return workType;
-	}
-
-	public void setWorkType(String workType) {
-		this.workType = workType;
-	}
-
 	public long getUpdatedBy() {
 		return updatedBy;
 	}
@@ -329,20 +321,14 @@ public class Product {
 		this.category = category;
 	}
 
-	public String getLastNoProductAdded() {
-		return lastNoProductAdded;
+	
+
+	public Date getLastUpdated() {
+		return lastUpdated;
 	}
 
-	public void setLastNoProductAdded(String lastNoProductAdded) {
-		this.lastNoProductAdded = lastNoProductAdded;
-	}
-
-	public Date getLastDateProductAdded() {
-		return lastDateProductAdded;
-	}
-
-	public void setLastDateProductAdded(Date lastDateProductAdded) {
-		this.lastDateProductAdded = lastDateProductAdded;
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 
 	public List<Item> getItems() {
@@ -359,6 +345,22 @@ public class Product {
 
 	public void setCatalog(List<CatalogItem> catalog) {
 		this.catalog = catalog;
+	}
+
+	public Specifications getSpecifications() {
+		return specifications;
+	}
+
+	public void setSpecifications(Specifications specifications) {
+		this.specifications = specifications;
+	}
+
+	public Definitions getDefinitions() {
+		return definitions;
+	}
+
+	public void setDefinitions(Definitions definitions) {
+		this.definitions = definitions;
 	}
 
 }

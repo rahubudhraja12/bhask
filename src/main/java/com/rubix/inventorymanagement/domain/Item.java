@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,17 +33,14 @@ public class Item {
 	private String itemColor;
 	private String itemSize;
 	private long quantity;
-	private String sku;
-	private long busyItemCode;
-	private String longName;
-	private String description;
+	private String itemSku;
 	private double price;
 	private long updatedBy;
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonFormat(pattern = "dd/MM/yyyy", shape = Shape.STRING)
 	private Date lastUpdated;
-	@OneToOne(mappedBy = "item", cascade = CascadeType.REMOVE)
-	private ItemImages itemImages;
+	@OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+	private List<ItemImages> itemImages;
 	@JsonBackReference
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "product_id", referencedColumnName = "productId")
@@ -57,19 +53,16 @@ public class Item {
 
 	}
 
-	public Item(long itemId, String itemName, String itemColor, String itemSize, long quantity, String sku,
-			long busyItemCode, String longName, String description, double price, long updatedBy, Date lastUpdated,
-			ItemImages itemImages, Product product, List<CatalogItem> catalog) {
+	public Item(long itemId, String itemName, String itemColor, String itemSize, long quantity, String itemSku,
+			double price, long updatedBy, Date lastUpdated, List<ItemImages> itemImages, Product product,
+			List<CatalogItem> catalog) {
 		super();
 		this.itemId = itemId;
 		this.itemName = itemName;
 		this.itemColor = itemColor;
 		this.itemSize = itemSize;
 		this.quantity = quantity;
-		this.sku = sku;
-		this.busyItemCode = busyItemCode;
-		this.longName = longName;
-		this.description = description;
+		this.itemSku = itemSku;
 		this.price = price;
 		this.updatedBy = updatedBy;
 		this.lastUpdated = lastUpdated;
@@ -118,36 +111,12 @@ public class Item {
 		this.quantity = quantity;
 	}
 
-	public String getSku() {
-		return sku;
+	public String getItemSku() {
+		return itemSku;
 	}
 
-	public void setSku(String sku) {
-		this.sku = sku;
-	}
-
-	public long getBusyItemCode() {
-		return busyItemCode;
-	}
-
-	public void setBusyItemCode(long busyItemCode) {
-		this.busyItemCode = busyItemCode;
-	}
-
-	public String getLongName() {
-		return longName;
-	}
-
-	public void setLongName(String longName) {
-		this.longName = longName;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setItemSku(String itemSku) {
+		this.itemSku = itemSku;
 	}
 
 	public double getPrice() {
@@ -174,11 +143,11 @@ public class Item {
 		this.lastUpdated = lastUpdated;
 	}
 
-	public ItemImages getItemImages() {
+	public List<ItemImages> getItemImages() {
 		return itemImages;
 	}
 
-	public void setItemImages(ItemImages itemImages) {
+	public void setItemImages(List<ItemImages> itemImages) {
 		this.itemImages = itemImages;
 	}
 
