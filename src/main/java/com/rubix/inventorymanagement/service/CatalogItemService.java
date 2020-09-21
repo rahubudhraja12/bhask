@@ -1,5 +1,7 @@
 package com.rubix.inventorymanagement.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,10 @@ public class CatalogItemService {
 	@Autowired
 	private CatalogItemRepository catalogItemRepository;
 
+	public List<CatalogItem> getAllCatalog() {
+		return catalogItemRepository.findAll();
+	}
+
 	public ResponseEntity<Object> addCatalog(CatalogItem catalogs, long productId, long itemId) throws Exception {
 
 		Product product = productRepository.findByProductId(productId);
@@ -40,7 +46,7 @@ public class CatalogItemService {
 
 	@Transactional
 	public ResponseEntity<Object> updateCatalog(CatalogItem catalogs, long productId, long itemId, long catalogId)
-			throws Exception, IdNotFoundException{
+			throws Exception, IdNotFoundException {
 		Product product = productRepository.findByProductId(productId);
 		Item item = itemRepository.findByItemId(itemId);
 		CatalogItem catalog = catalogItemRepository.findByCatalogId(catalogId);
@@ -62,7 +68,7 @@ public class CatalogItemService {
 
 	}
 
-	public ResponseEntity<?> deleteCatalog(long catalogId)throws Exception, IdNotFoundException {
+	public ResponseEntity<?> deleteCatalog(long catalogId) throws Exception, IdNotFoundException {
 
 		CatalogItem catalog = catalogItemRepository.findByCatalogId(catalogId);
 		if (catalog == null) {
@@ -72,4 +78,5 @@ public class CatalogItemService {
 			return ResponseEntity.ok("Catalog Deleted");
 		}
 	}
+
 }

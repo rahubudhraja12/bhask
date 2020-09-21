@@ -1,5 +1,7 @@
 package com.rubix.inventorymanagement.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,10 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+	public List<Category> getAllCategory() {
+		return categoryRepository.findAll();
+	}
+
 	public ResponseEntity<Object> addCategory(Category category) throws Exception {
 
 		Category categorys = new Category();
@@ -30,7 +36,8 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> updateCategory(Category categorys, long categoryId) throws Exception,IdNotFoundException {
+	public ResponseEntity<Object> updateCategory(Category categorys, long categoryId)
+			throws Exception, IdNotFoundException {
 
 		Category category = new Category();
 		category = categoryRepository.findByCategoryId(categoryId);
@@ -49,7 +56,7 @@ public class CategoryService {
 
 	}
 
-	public ResponseEntity<?> deleteCategory(long categoryId) throws Exception,IdNotFoundException{
+	public ResponseEntity<?> deleteCategory(long categoryId) throws Exception, IdNotFoundException {
 
 		Category category = categoryRepository.findByCategoryId(categoryId);
 		if (category == null) {
@@ -59,4 +66,5 @@ public class CategoryService {
 			return ResponseEntity.ok("Category Deleted");
 		}
 	}
+
 }

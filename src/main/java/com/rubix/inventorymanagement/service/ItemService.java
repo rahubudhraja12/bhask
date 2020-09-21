@@ -1,5 +1,6 @@
 package com.rubix.inventorymanagement.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -24,6 +25,16 @@ public class ItemService {
 	private ItemRepository itemRepository;
 	@Autowired
 	private ItemImagesRepository itemImagesRepository;
+
+	public List<Item> findAllItem() {
+		return itemRepository.findAll();
+	}
+
+	public List<Item> findItemByProductId(Long productId) {
+		List<Item> item = new ArrayList<>();
+		item = itemRepository.findByProductId(productId);
+		return item;
+	}
 
 	public ResponseEntity<Object> addItem(Item items, long productId) throws Exception, IdNotFoundException {
 		Product product = productRepository.findByProductId(productId);
