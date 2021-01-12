@@ -23,8 +23,10 @@ public class AddressService {
 
 	public List<Address> getAddress() {
 		List<Address> address = addressRepository.findAll();
+		System.out.println("test");
 		return address;
 	}
+
 
 	public ResponseEntity<Object> createAddress(Address address, long userId) throws Exception, IdNotFoundException {
 		SsUser users = userRepository.findByUserId(userId);
